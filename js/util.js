@@ -6,12 +6,8 @@ const getRandomInteger = (min, max) => {
 };
 
 const createIdGenerator = () => {
-  let lastGeneratedId = 0;
-
-  return () => {
-    lastGeneratedId += 1;
-    return lastGeneratedId;
-  };
+  let lastGeneratedId = 1;
+  return () => lastGeneratedId++;
 };
 
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];

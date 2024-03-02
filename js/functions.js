@@ -25,10 +25,6 @@ const getNumber = (data) => {
   return parseInt(result, 10);
 };
 
-isLengthString('проверяемая строка', 20);
-isPalindrome('Лёша на полке клопа нашёл ');
-getNumber(-1.5);
-
 const isMeeting = (startDay, endDay, startMeeting, duration) => {
   const getMinutes = (time) => {
     const [hours, minutes] = time.split(':').map(Number);
@@ -42,5 +38,8 @@ const isMeeting = (startDay, endDay, startMeeting, duration) => {
   return startDayMinutes <= startMeetingMinutes && (startMeetingMinutes + duration) <= endDayMinutes;
 };
 
+isLengthString('проверяемая строка', 20);
+isPalindrome('Лёша на полке клопа нашёл ');
+getNumber(-1.5);
 isMeeting('08:00', '17:30', '14:00', 90);
 isMeeting('8:00', '17:30', '08:00', 900);

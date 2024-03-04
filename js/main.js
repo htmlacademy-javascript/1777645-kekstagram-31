@@ -1,1 +1,1 @@
-import './miniatures';
+import './big-photo';

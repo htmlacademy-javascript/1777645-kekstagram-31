@@ -1,18 +1,15 @@
-import {isEscapeKey, createElement} from './util';
+import {isEscapeKey, createElement, classAdd, classRemove, handlerAdd, handlerRemove} from './util';
 import {dataPhotos} from './miniatures';
 
 const SHOW_COUNT_COMMENT = 5;
 const HIDDEN_CLASS = 'hidden';
-const body = document.querySelector('body');
-const blockPictures = document.querySelector('.pictures');
-const bigPicture = document.querySelector('.big-picture');
+const body = document.body;
+const blockPictures = body.querySelector('.pictures');
+const bigPicture = body.querySelector('.big-picture');
 const bigPictureCancel = bigPicture.querySelector('.big-picture__cancel');
 const socialComments = bigPicture.querySelector('.social__comments');
 const commentsLoader = bigPicture.querySelector('.comments-loader');
 const commentShownCount = bigPicture.querySelector('.social__comment-shown-count');
-
-const classAdd = (element, className) => element.classList.add(className);
-const classRemove = (element, className) => element.classList.remove(className);
 
 const showComments = (array, count) => {
   for (let i = 0; i < count; i++) {
@@ -31,31 +28,31 @@ const loadComments = () => {
   }
 };
 
-const closeModal = () => {
+const closeModalPhoto = () => {
   classRemove(body, 'modal-open');
   classAdd(bigPicture, HIDDEN_CLASS);
-  bigPictureCancel.removeEventListener('click', closeModal);
-  document.removeEventListener('keydown', onDocumentKeydown);
-  commentsLoader.removeEventListener('click', loadComments);
+  handlerRemove(bigPictureCancel, 'click', closeModalPhoto);
+  handlerRemove(document, 'keydown', onDocumentKeydown);
+  handlerRemove(commentsLoader, 'click', loadComments);
   classRemove(commentsLoader, HIDDEN_CLASS);
 };
 
 function onDocumentKeydown(evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    closeModal();
+    closeModalPhoto();
   }
 }
 
-const openModal = () => {
+const openModalPhoto = () => {
   classAdd(body, 'modal-open');
   classRemove(bigPicture, HIDDEN_CLASS);
-  bigPictureCancel.addEventListener('click', closeModal);
-  document.addEventListener('keydown', onDocumentKeydown);
-  commentsLoader.addEventListener('click', loadComments);
+  handlerAdd(bigPictureCancel, 'click', closeModalPhoto);
+  handlerAdd(document, 'keydown', onDocumentKeydown);
+  handlerAdd(commentsLoader, 'click', loadComments);
 };
 
-const clearComment = () => {
+const clearComments = () => {
   socialComments.innerHTML = '';
 };
 
@@ -92,12 +89,12 @@ const showBigPhoto = (evt) => {
     evt.preventDefault();
     const currentPhoto = dataPhotos.find((photo) => photo.id === +target.dataset.id);
 
-    openModal();
+    openModalPhoto();
     createPhotoData(currentPhoto);
-    clearComment();
+    clearComments();
     createComments(currentPhoto.comments);
     loadComments();
   }
 };
 
-blockPictures.addEventListener('click', showBigPhoto);
+handlerAdd(blockPictures, 'click', showBigPhoto);

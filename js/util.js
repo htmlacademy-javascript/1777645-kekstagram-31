@@ -21,4 +21,10 @@ const createElement = (tag, className, text) => {
   return element;
 };
 
-export {getRandomInteger, createIdGenerator, getRandomArrayElement, isEscapeKey, createElement};
+const classAdd = (element, className) => element.classList.add(className);
+const classRemove = (element, className) => element.classList.remove(className);
+
+const handlerAdd = (element, event, handler) => element.addEventListener(event, handler);
+const handlerRemove = (element, event, handler) => element.removeEventListener(event, handler);
+
+export {getRandomInteger, createIdGenerator, getRandomArrayElement, isEscapeKey, createElement, classAdd, classRemove, handlerAdd, handlerRemove};

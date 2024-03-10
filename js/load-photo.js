@@ -1,6 +1,7 @@
 import {isEscapeKey, classAdd, classRemove, handlerAdd, handlerRemove} from './util';
 import {pristine} from './validation';
 import {scalePhoto, defaultScale} from './scale-photo';
+import {createEffectSlider, addEffectHandler, removeEffectHandler} from './effects-photo';
 
 const body = document.body;
 const imgUploadForm = body.querySelector('.img-upload__form');
@@ -43,6 +44,7 @@ const closeModalLoad = () => {
   removeInputHandler();
   defaultScale();
   handlerRemove(imgUploadScale, 'click', scalePhoto);
+  removeEffectHandler();
 };
 
 function onDocumentKeydown(evt) {
@@ -59,6 +61,8 @@ const openModalLoad = () => {
   handlerAdd(imgUploadCancel, 'click', closeModalLoad);
   addInputHandler();
   handlerAdd(imgUploadScale, 'click', scalePhoto);
+  createEffectSlider();
+  addEffectHandler();
 };
 
 handlerAdd(imgUploadInput, 'change', openModalLoad);

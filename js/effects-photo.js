@@ -1,4 +1,4 @@
-import {classAdd, classRemove} from './util';
+import {classAdd, classRemove, handlerAdd, handlerRemove} from './util';
 
 const EffectParameters = {
   NONE: {name: 'none', min: 0, max: 0, unit: '', step: 0},
@@ -59,12 +59,12 @@ const checkEffect = (evt) => {
 
 const addEffectHandler = () => {
   effectLevelSlider.noUiSlider.on('update', getEffectValue);
-  imgUploadEffects.addEventListener('change', checkEffect);
+  handlerAdd(imgUploadEffects, 'change', checkEffect);
 };
 
 const removeEffectHandler = () => {
   effectLevelSlider.noUiSlider.destroy();
-  imgUploadEffects.removeEventListener('change', checkEffect);
+  handlerRemove(imgUploadEffects, 'change', checkEffect);
 };
 
 export {createEffectSlider, addEffectHandler, removeEffectHandler};

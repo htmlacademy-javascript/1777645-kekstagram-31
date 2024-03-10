@@ -1,10 +1,12 @@
 import {isEscapeKey, classAdd, classRemove, handlerAdd, handlerRemove} from './util';
 import {pristine} from './validation';
+import {scalePhoto, defaultScale} from './scale-photo';
 
 const body = document.body;
 const imgUploadForm = body.querySelector('.img-upload__form');
 const imgUploadInput = imgUploadForm.querySelector('.img-upload__input');
 const imgUploadOverlay = imgUploadForm.querySelector('.img-upload__overlay');
+const imgUploadScale = imgUploadOverlay.querySelector('.img-upload__scale');
 const imgUploadCancel = imgUploadForm.querySelector('.img-upload__cancel');
 const textHashtags = imgUploadForm.querySelector('.text__hashtags');
 const textDescription = imgUploadForm.querySelector('.text__description');
@@ -39,6 +41,8 @@ const closeModalLoad = () => {
   imgUploadForm.reset();
   pristine.reset();
   removeInputHandler();
+  defaultScale();
+  handlerRemove(imgUploadScale, 'click', scalePhoto);
 };
 
 function onDocumentKeydown(evt) {
@@ -54,6 +58,7 @@ const openModalLoad = () => {
   handlerAdd(document, 'keydown', onDocumentKeydown);
   handlerAdd(imgUploadCancel, 'click', closeModalLoad);
   addInputHandler();
+  handlerAdd(imgUploadScale, 'click', scalePhoto);
 };
 
 handlerAdd(imgUploadInput, 'change', openModalLoad);

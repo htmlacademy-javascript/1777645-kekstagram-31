@@ -2,6 +2,7 @@ import {isEscapeKey, classAdd, classRemove, handlerAdd, handlerRemove} from './u
 import {pristine} from './validation';
 import {scalePhoto, defaultScale} from './scale-photo';
 import {createEffectSlider, addEffectHandler, removeEffectHandler} from './effects-photo';
+import {setUserFormSubmit} from './api/send-data';
 
 const body = document.body;
 const imgUploadForm = body.querySelector('.img-upload__form');
@@ -9,45 +10,28 @@ const imgUploadInput = imgUploadForm.querySelector('.img-upload__input');
 const imgUploadOverlay = imgUploadForm.querySelector('.img-upload__overlay');
 const imgUploadScale = imgUploadOverlay.querySelector('.img-upload__scale');
 const imgUploadCancel = imgUploadForm.querySelector('.img-upload__cancel');
-const textHashtags = imgUploadForm.querySelector('.text__hashtags');
-const textDescription = imgUploadForm.querySelector('.text__description');
+const imgUploadText = imgUploadForm.querySelector('.img-upload__text');
 
-const inputInFocus = () => {
-  handlerRemove(document, 'keydown', onDocumentKeydown);
-};
-
-const inputOutFocus = () => {
-  handlerAdd(document, 'keydown', onDocumentKeydown);
-};
-
-const addInputHandler = () => {
-  handlerAdd(textHashtags, 'focus', inputInFocus);
-  handlerAdd(textDescription, 'focus', inputInFocus);
-  handlerAdd(textHashtags, 'blur', inputOutFocus);
-  handlerAdd(textDescription, 'blur', inputOutFocus);
-};
-
-const removeInputHandler = () => {
-  handlerRemove(textHashtags, 'focus', inputInFocus);
-  handlerRemove(textDescription, 'focus', inputInFocus);
-  handlerRemove(textHashtags, 'blur', inputOutFocus);
-  handlerRemove(textDescription, 'blur', inputOutFocus);
+const inputInFocus = (evt) => {
+  if (evt.target.matches('.text__hashtags, .text__description')) {
+    evt.stopPropagation();
+  }
 };
 
 const closeModalLoad = () => {
   classRemove(body, 'modal-open');
   classAdd(imgUploadOverlay, 'hidden');
-  handlerRemove(document, 'keydown', onDocumentKeydown);
+  handlerRemove(document, 'keydown', onDocumentKeydownLoad);
   handlerRemove(imgUploadCancel, 'click', closeModalLoad);
   imgUploadForm.reset();
   pristine.reset();
-  removeInputHandler();
   defaultScale();
   handlerRemove(imgUploadScale, 'click', scalePhoto);
   removeEffectHandler();
+  setUserFormSubmit(null, false);
 };
 
-function onDocumentKeydown(evt) {
+function onDocumentKeydownLoad(evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeModalLoad();
@@ -57,12 +41,15 @@ function onDocumentKeydown(evt) {
 const openModalLoad = () => {
   classAdd(body, 'modal-open');
   classRemove(imgUploadOverlay, 'hidden');
-  handlerAdd(document, 'keydown', onDocumentKeydown);
+  handlerAdd(document, 'keydown', onDocumentKeydownLoad);
   handlerAdd(imgUploadCancel, 'click', closeModalLoad);
-  addInputHandler();
+  handlerAdd(imgUploadText, 'keydown', inputInFocus);
   handlerAdd(imgUploadScale, 'click', scalePhoto);
   createEffectSlider();
   addEffectHandler();
+  setUserFormSubmit(closeModalLoad, true);
 };
 
 handlerAdd(imgUploadInput, 'change', openModalLoad);
+
+export {closeModalLoad, onDocumentKeydownLoad};

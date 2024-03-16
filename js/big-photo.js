@@ -1,5 +1,4 @@
 import {isEscapeKey, createElement, classAdd, classRemove, handlerAdd, handlerRemove} from './util';
-import {dataPhotos} from './miniatures';
 
 const SHOW_COUNT_COMMENT = 5;
 const HIDDEN_CLASS = 'hidden';
@@ -32,12 +31,12 @@ const closeModalPhoto = () => {
   classRemove(body, 'modal-open');
   classAdd(bigPicture, HIDDEN_CLASS);
   handlerRemove(bigPictureCancel, 'click', closeModalPhoto);
-  handlerRemove(document, 'keydown', onDocumentKeydown);
+  handlerRemove(document, 'keydown', onDocumentKeydownPhoto);
   handlerRemove(commentsLoader, 'click', loadComments);
   classRemove(commentsLoader, HIDDEN_CLASS);
 };
 
-function onDocumentKeydown(evt) {
+function onDocumentKeydownPhoto(evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeModalPhoto();
@@ -48,7 +47,7 @@ const openModalPhoto = () => {
   classAdd(body, 'modal-open');
   classRemove(bigPicture, HIDDEN_CLASS);
   handlerAdd(bigPictureCancel, 'click', closeModalPhoto);
-  handlerAdd(document, 'keydown', onDocumentKeydown);
+  handlerAdd(document, 'keydown', onDocumentKeydownPhoto);
   handlerAdd(commentsLoader, 'click', loadComments);
 };
 
@@ -83,18 +82,21 @@ const createPhotoData = ({url, description, likes, comments}) => {
   bigPicture.querySelector('.social__caption').textContent = description;
 };
 
-const showBigPhoto = (evt) => {
-  const target = evt.target.closest('.picture');
-  if (target) {
-    evt.preventDefault();
-    const currentPhoto = dataPhotos.find((photo) => photo.id === +target.dataset.id);
+const checkPhotoData = (photos) => {
+  const showBigPhoto = (evt) => {
+    const target = evt.target.closest('.picture');
+    if (target) {
+      evt.preventDefault();
+      const currentPhoto = photos.find((photo) => photo.id === +target.dataset.id);
 
-    openModalPhoto();
-    createPhotoData(currentPhoto);
-    clearComments();
-    createComments(currentPhoto.comments);
-    loadComments();
-  }
+      openModalPhoto();
+      createPhotoData(currentPhoto);
+      clearComments();
+      createComments(currentPhoto.comments);
+      loadComments();
+    }
+  };
+  handlerAdd(blockPictures, 'click', showBigPhoto);
 };
 
-handlerAdd(blockPictures, 'click', showBigPhoto);
+export {checkPhotoData};

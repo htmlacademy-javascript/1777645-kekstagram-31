@@ -1,21 +1,22 @@
-import {createPhotos} from './data';
-
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const blockPictures = document.querySelector('.pictures');
-const dataPhotos = createPhotos();
-const fragment = document.createDocumentFragment();
 
-dataPhotos.forEach(({id, url, description, likes, comments}) => {
-  const photoElement = pictureTemplate.cloneNode(true);
-  photoElement.querySelector('.picture__img').src = url;
-  photoElement.querySelector('.picture__img').alt = description;
-  photoElement.querySelector('.picture__comments').textContent = comments.length;
-  photoElement.querySelector('.picture__likes').textContent = likes;
-  photoElement.dataset.id = id;
+const renderMiniatures = (photos) => {
+  const fragment = document.createDocumentFragment();
 
-  fragment.append(photoElement);
-});
+  photos.forEach(({id, url, description, likes, comments}) => {
+    const photoElement = pictureTemplate.cloneNode(true);
+    photoElement.querySelector('.picture__img').src = url;
+    photoElement.querySelector('.picture__img').alt = description;
+    photoElement.querySelector('.picture__comments').textContent = comments.length;
+    photoElement.querySelector('.picture__likes').textContent = likes;
+    photoElement.dataset.id = id;
 
-blockPictures.append(fragment);
+    fragment.append(photoElement);
+  });
 
-export {dataPhotos};
+  blockPictures.append(fragment);
+};
+
+
+export {renderMiniatures};

@@ -9,6 +9,7 @@ const MessageError = {
 };
 const body = document.body;
 const imgUploadForm = body.querySelector('.img-upload__form');
+const imgUploadSubmit = imgUploadForm.querySelector('.img-upload__submit');
 const textHashtags = imgUploadForm.querySelector('.text__hashtags');
 
 const pristine = new Pristine(imgUploadForm, {
@@ -32,10 +33,12 @@ pristine.addValidator(textHashtags, checkLengthHashtag, MessageError.LENGTH);
 pristine.addValidator(textHashtags, checkCountHashtag, MessageError.COUNT);
 pristine.addValidator(textHashtags, checkDuplicateHashtag, MessageError.DUPLICATE);
 
-imgUploadForm.addEventListener('submit', (evt) => {
-  if (!pristine.validate()) {
-    evt.preventDefault();
-  }
-});
+const buttonDisabled = () => {
+  imgUploadSubmit.disabled = true;
+};
 
-export {pristine};
+const buttonEnabled = () => {
+  imgUploadSubmit.disabled = false;
+};
+
+export {pristine, imgUploadForm, buttonDisabled, buttonEnabled};

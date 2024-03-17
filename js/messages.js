@@ -1,5 +1,5 @@
 import {isEscapeKey, handlerAdd, handlerRemove} from './util';
-import {onDocumentKeydownUploadModal} from './load-photo';
+import {onDocumentKeydownUploadModal} from './upload-photo';
 import {MessageClass} from './api/api';
 
 const DELAY_TIME = 5000;

@@ -3,6 +3,7 @@ import {pristine} from './validation';
 import {adjustPhotoScale, resetPhotoScale} from './scale-photo';
 import {createEffectSlider, addEffectHandler, removeEffectHandler} from './effects-photo';
 import {setUserFormSubmit} from './api/send-data';
+import {uploadAndPreviewPhoto, clearPreviewPhoto} from './preview-photo';
 
 const body = document.body;
 const imgUploadForm = body.querySelector('.img-upload__form');
@@ -29,6 +30,7 @@ const closeUploadModal = () => {
   handlerRemove(imgUploadScale, 'click', adjustPhotoScale);
   removeEffectHandler();
   setUserFormSubmit(null, false);
+  clearPreviewPhoto();
 };
 
 function onDocumentKeydownUploadModal(evt) {
@@ -48,6 +50,7 @@ const openUploadModal = () => {
   createEffectSlider();
   addEffectHandler();
   setUserFormSubmit(closeUploadModal, true);
+  uploadAndPreviewPhoto();
 };
 
 handlerAdd(imgUploadInput, 'change', openUploadModal);

@@ -3,9 +3,14 @@ import {renderMiniatures} from '../miniatures';
 import {checkPhotoData} from '../big-photo';
 import {initializeMessage} from '../messages';
 
-getData()
-  .then((photos) => {
+const processData = async () => {
+  try {
+    const photos = await getData();
     renderMiniatures(photos);
     checkPhotoData(photos);
-  })
-  .catch(() => initializeMessage(MessageClass.DATA_ERROR));
+  } catch (error) {
+    initializeMessage(MessageClass.DATA_ERROR);
+  }
+};
+
+processData();

@@ -5,18 +5,22 @@ import {initializeMessage} from '../messages';
 
 let handleFormSubmission = null;
 
-const createFormSubmissionHandler = (onSuccess) => (evt) => {
+const createFormSubmissionHandler = (onSuccess) => async (evt) => {
   evt.preventDefault();
 
   if (pristine.validate()) {
     buttonDisabled();
     const formData = new FormData(evt.target);
 
-    sendData(formData)
-      .then(onSuccess)
-      .then(() => initializeMessage(MessageClass.SUCCESS))
-      .catch(() => initializeMessage(MessageClass.ERROR))
-      .finally(buttonEnabled);
+    try {
+      await sendData(formData);
+      onSuccess();
+      initializeMessage(MessageClass.SUCCESS);
+    } catch {
+      initializeMessage(MessageClass.ERROR);
+    } finally {
+      buttonEnabled();
+    }
   }
 };
 

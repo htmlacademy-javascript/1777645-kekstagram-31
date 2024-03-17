@@ -17,7 +17,7 @@ const showComments = (array, count) => {
   commentShownCount.textContent = socialComments.children.length - socialComments.querySelectorAll(`.${HIDDEN_CLASS}`).length;
 };
 
-const loadComments = () => {
+const loadMoreComments = () => {
   const hiddenComments = socialComments.querySelectorAll(`.${HIDDEN_CLASS}`);
   if (hiddenComments.length > SHOW_COUNT_COMMENT) {
     showComments(hiddenComments, SHOW_COUNT_COMMENT);
@@ -32,7 +32,7 @@ const closeModalPhoto = () => {
   classAdd(bigPicture, HIDDEN_CLASS);
   handlerRemove(bigPictureCancel, 'click', closeModalPhoto);
   handlerRemove(document, 'keydown', onDocumentKeydownPhoto);
-  handlerRemove(commentsLoader, 'click', loadComments);
+  handlerRemove(commentsLoader, 'click', loadMoreComments);
   classRemove(commentsLoader, HIDDEN_CLASS);
 };
 
@@ -48,14 +48,14 @@ const openModalPhoto = () => {
   classRemove(bigPicture, HIDDEN_CLASS);
   handlerAdd(bigPictureCancel, 'click', closeModalPhoto);
   handlerAdd(document, 'keydown', onDocumentKeydownPhoto);
-  handlerAdd(commentsLoader, 'click', loadComments);
+  handlerAdd(commentsLoader, 'click', loadMoreComments);
 };
 
 const clearComments = () => {
   socialComments.innerHTML = '';
 };
 
-const createComments = (array) => {
+const createCommentElements = (array) => {
   const fragment = document.createDocumentFragment();
 
   array.forEach(({avatar, name, message}) => {
@@ -82,21 +82,21 @@ const createPhotoData = ({url, description, likes, comments}) => {
   bigPicture.querySelector('.social__caption').textContent = description;
 };
 
-const checkPhotoData = (photos) => {
+const initializePhotoDisplay = (arrayPhotos) => {
   const showBigPhoto = (evt) => {
     const target = evt.target.closest('.picture');
     if (target) {
       evt.preventDefault();
-      const currentPhoto = photos.find((photo) => photo.id === +target.dataset.id);
+      const currentPhoto = arrayPhotos.find((photo) => photo.id === +target.dataset.id);
 
       openModalPhoto();
       createPhotoData(currentPhoto);
       clearComments();
-      createComments(currentPhoto.comments);
-      loadComments();
+      createCommentElements(currentPhoto.comments);
+      loadMoreComments();
     }
   };
   handlerAdd(blockPictures, 'click', showBigPhoto);
 };
 
-export {checkPhotoData};
+export {initializePhotoDisplay};

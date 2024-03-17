@@ -1,6 +1,6 @@
 import {isEscapeKey, classAdd, classRemove, handlerAdd, handlerRemove} from './util';
 import {pristine} from './validation';
-import {scalePhoto, defaultScale} from './scale-photo';
+import {adjustPhotoScale, resetPhotoScale} from './scale-photo';
 import {createEffectSlider, addEffectHandler, removeEffectHandler} from './effects-photo';
 import {setUserFormSubmit} from './api/send-data';
 
@@ -12,44 +12,44 @@ const imgUploadScale = imgUploadOverlay.querySelector('.img-upload__scale');
 const imgUploadCancel = imgUploadForm.querySelector('.img-upload__cancel');
 const imgUploadText = imgUploadForm.querySelector('.img-upload__text');
 
-const inputInFocus = (evt) => {
+const stopPropagationOnInputFocus = (evt) => {
   if (evt.target.matches('.text__hashtags, .text__description')) {
     evt.stopPropagation();
   }
 };
 
-const closeModalLoad = () => {
+const closeUploadModal = () => {
   classRemove(body, 'modal-open');
   classAdd(imgUploadOverlay, 'hidden');
-  handlerRemove(document, 'keydown', onDocumentKeydownLoad);
-  handlerRemove(imgUploadCancel, 'click', closeModalLoad);
+  handlerRemove(document, 'keydown', onDocumentKeydownUploadModal);
+  handlerRemove(imgUploadCancel, 'click', closeUploadModal);
   imgUploadForm.reset();
   pristine.reset();
-  defaultScale();
-  handlerRemove(imgUploadScale, 'click', scalePhoto);
+  resetPhotoScale();
+  handlerRemove(imgUploadScale, 'click', adjustPhotoScale);
   removeEffectHandler();
   setUserFormSubmit(null, false);
 };
 
-function onDocumentKeydownLoad(evt) {
+function onDocumentKeydownUploadModal(evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    closeModalLoad();
+    closeUploadModal();
   }
 }
 
-const openModalLoad = () => {
+const openUploadModal = () => {
   classAdd(body, 'modal-open');
   classRemove(imgUploadOverlay, 'hidden');
-  handlerAdd(document, 'keydown', onDocumentKeydownLoad);
-  handlerAdd(imgUploadCancel, 'click', closeModalLoad);
-  handlerAdd(imgUploadText, 'keydown', inputInFocus);
-  handlerAdd(imgUploadScale, 'click', scalePhoto);
+  handlerAdd(document, 'keydown', onDocumentKeydownUploadModal);
+  handlerAdd(imgUploadCancel, 'click', closeUploadModal);
+  handlerAdd(imgUploadText, 'keydown', stopPropagationOnInputFocus);
+  handlerAdd(imgUploadScale, 'click', adjustPhotoScale);
   createEffectSlider();
   addEffectHandler();
-  setUserFormSubmit(closeModalLoad, true);
+  setUserFormSubmit(closeUploadModal, true);
 };
 
-handlerAdd(imgUploadInput, 'change', openModalLoad);
+handlerAdd(imgUploadInput, 'change', openUploadModal);
 
-export {closeModalLoad, onDocumentKeydownLoad};
+export {closeUploadModal, onDocumentKeydownUploadModal};

@@ -16,9 +16,9 @@ const effectLevelValue = imgUploadEffectLevel.querySelector('.effect-level__valu
 const effectLevelSlider = imgUploadEffectLevel.querySelector('.effect-level__slider');
 let currentEffect = EffectParameters.NONE;
 
-const isDefaultEffect = () => currentEffect.name === EffectParameters.NONE.name;
+const isNoteEffect = () => currentEffect.name === EffectParameters.NONE.name;
 
-const toggleEffectSlider = () => isDefaultEffect() ? classAdd(imgUploadEffectLevel, 'hidden') : classRemove(imgUploadEffectLevel, 'hidden');
+const toggleEffectSliderVisibility = () => isNoteEffect() ? classAdd(imgUploadEffectLevel, 'hidden') : classRemove(imgUploadEffectLevel, 'hidden');
 
 const createEffectSlider = () => {
   noUiSlider.create(effectLevelSlider, {
@@ -43,13 +43,13 @@ const updateEffectSlider = () => {
   });
 };
 
-const getEffectValue = () => {
+const applyEffectValue = () => {
   effectLevelValue.value = effectLevelSlider.noUiSlider.get();
   imgUploadPreview.style.filter = `${currentEffect.name}(${effectLevelValue.value}${currentEffect.unit})`;
-  toggleEffectSlider();
+  toggleEffectSliderVisibility();
 };
 
-const checkEffect = (evt) => {
+const updateCurrentEffect = (evt) => {
   if (evt.target.matches('.effects__radio')) {
     const effect = evt.target.value.toUpperCase();
     currentEffect = EffectParameters[effect];
@@ -58,13 +58,13 @@ const checkEffect = (evt) => {
 };
 
 const addEffectHandler = () => {
-  effectLevelSlider.noUiSlider.on('update', getEffectValue);
-  handlerAdd(imgUploadEffects, 'change', checkEffect);
+  effectLevelSlider.noUiSlider.on('update', applyEffectValue);
+  handlerAdd(imgUploadEffects, 'change', updateCurrentEffect);
 };
 
 const removeEffectHandler = () => {
   effectLevelSlider.noUiSlider.destroy();
-  handlerRemove(imgUploadEffects, 'change', checkEffect);
+  handlerRemove(imgUploadEffects, 'change', updateCurrentEffect);
 };
 
 export {createEffectSlider, addEffectHandler, removeEffectHandler};

@@ -7,8 +7,7 @@ const MessageError = {
   DUPLICATE: 'Один и тот же хэштег не может быть использован дважды',
   LENGTH: 'Максимальная длина одного хэштега 20 символов, включая решётку'
 };
-const body = document.body;
-const imgUploadForm = body.querySelector('.img-upload__form');
+const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUploadSubmit = imgUploadForm.querySelector('.img-upload__submit');
 const textHashtags = imgUploadForm.querySelector('.text__hashtags');
 

@@ -1,5 +1,5 @@
 import {isEscapeKey, handlerAdd, handlerRemove} from './util';
-import {onDocumentKeydownLoad} from './load-photo';
+import {onDocumentKeydownUploadModal} from './load-photo';
 import {MessageClass} from './api/api';
 
 const DELAY_TIME = 5000;
@@ -13,14 +13,14 @@ const initializeMessage = (className) => {
 
   const closeMessage = () => {
     if (className === MessageClass.ERROR) {
-      handlerAdd(document, 'keydown', onDocumentKeydownLoad);
+      handlerAdd(document, 'keydown', onDocumentKeydownUploadModal);
     }
 
     handlerRemove(document, 'keydown', onDocumentKeydownMessage);
     copyTemplate.remove();
   };
 
-  const closeIfNotMessage = (evt) => {
+  const closeIfClickedOutsideMessage = (evt) => {
     if (!evt.target.closest(`.${className}__inner`)) {
       closeMessage();
     }
@@ -32,27 +32,27 @@ const initializeMessage = (className) => {
     }
   }
 
-  const removeMessageAfterDelay = () => {
+  const scheduleMessageRemoval = () => {
     setTimeout(() => {
       copyTemplate.remove();
     }, DELAY_TIME);
   };
 
-  const showMessage = () => {
+  const displayMessage = () => {
     fragment.append(copyTemplate);
     body.append(fragment);
 
     if (className === MessageClass.DATA_ERROR) {
-      return removeMessageAfterDelay();
+      return scheduleMessageRemoval();
     }
 
-    handlerRemove(document, 'keydown', onDocumentKeydownLoad);
+    handlerRemove(document, 'keydown', onDocumentKeydownUploadModal);
     handlerAdd(document, 'keydown', onDocumentKeydownMessage);
-    handlerAdd(copyTemplate, 'click', closeIfNotMessage);
+    handlerAdd(copyTemplate, 'click', closeIfClickedOutsideMessage);
     handlerAdd(button, 'click', closeMessage);
   };
 
-  showMessage();
+  displayMessage();
 };
 
 export {initializeMessage};

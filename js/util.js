@@ -13,4 +13,12 @@ const classRemove = (element, className) => element.classList.remove(className);
 const handlerAdd = (element, event, handler) => element.addEventListener(event, handler);
 const handlerRemove = (element, event, handler) => element.removeEventListener(event, handler);
 
-export {isEscapeKey, createElement, classAdd, classRemove, handlerAdd, handlerRemove};
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+export {isEscapeKey, createElement, classAdd, classRemove, handlerAdd, handlerRemove, debounce};

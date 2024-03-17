@@ -4,20 +4,19 @@ const ScaleParameters = {
   STEP: 0.25,
   STEP_VALUE: 25,
 };
-const body = document.body;
-const imgUploadOverlay = body.querySelector('.img-upload__overlay');
+const imgUploadOverlay = document.querySelector('.img-upload__overlay');
 const imgUploadScale = imgUploadOverlay.querySelector('.img-upload__scale');
 const scaleControlValue = imgUploadScale.querySelector('.scale__control--value');
 const imgUploadPreview = imgUploadOverlay.querySelector('.img-upload__preview img');
 let currentScale = ScaleParameters.DEFAULT;
 let currentScaleValue = ScaleParameters.DEFAULT_VALUE;
 
-const updateScale = () => {
+const applyScaleToPhoto = () => {
   imgUploadPreview.style.transform = `scale(${currentScale})`;
   scaleControlValue.value = `${currentScaleValue}%`;
 };
 
-const scalePhoto = (evt) => {
+const adjustPhotoScale = (evt) => {
   if (evt.target.matches('.scale__control--smaller') && currentScale > ScaleParameters.STEP) {
     currentScale -= ScaleParameters.STEP;
     currentScaleValue -= ScaleParameters.STEP_VALUE;
@@ -25,13 +24,13 @@ const scalePhoto = (evt) => {
     currentScale += ScaleParameters.STEP;
     currentScaleValue += ScaleParameters.STEP_VALUE;
   }
-  updateScale();
+  applyScaleToPhoto();
 };
 
-const defaultScale = () => {
+const resetPhotoScale = () => {
   currentScale = ScaleParameters.DEFAULT;
   currentScaleValue = ScaleParameters.DEFAULT_VALUE;
-  updateScale();
+  applyScaleToPhoto();
 };
 
-export {scalePhoto, defaultScale};
+export {adjustPhotoScale, resetPhotoScale};

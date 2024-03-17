@@ -16,12 +16,12 @@ const effectLevelValue = imgUploadEffectLevel.querySelector('.effect-level__valu
 const effectLevelSlider = imgUploadEffectLevel.querySelector('.effect-level__slider');
 let currentEffect = EffectParameters.NONE;
 
-const isNoteEffect = () => currentEffect.name === EffectParameters.NONE.name;
+const isNoneEffect = () => currentEffect.name === EffectParameters.NONE.name;
 
-const toggleEffectSliderVisibility = () => isNoteEffect() ? classAdd(imgUploadEffectLevel, 'hidden') : classRemove(imgUploadEffectLevel, 'hidden');
+const toggleEffectSliderVisibility = () => isNoneEffect() ? classAdd(imgUploadEffectLevel, 'hidden') : classRemove(imgUploadEffectLevel, 'hidden');
 
 const createEffectSlider = () => {
-  noUiSlider.create(effectLevelSlider, {
+  const sliderOptions = {
     range: {
       min: currentEffect.min,
       max: currentEffect.max,
@@ -29,7 +29,22 @@ const createEffectSlider = () => {
     start: currentEffect.max,
     step: currentEffect.step,
     connect: 'lower',
-  });
+    format: {
+      to: (value) => {
+        if (Number.isInteger(value)) {
+          return value.toFixed(0);
+        }
+        return value.toFixed(1);
+      },
+      from: (value) => parseFloat(value)
+    },
+  };
+
+  if (effectLevelSlider.noUiSlider) {
+    effectLevelSlider.noUiSlider.updateOptions(sliderOptions);
+  } else {
+    noUiSlider.create(effectLevelSlider, sliderOptions);
+  }
 };
 
 const updateEffectSlider = () => {
@@ -54,6 +69,10 @@ const updateCurrentEffect = (evt) => {
     const effect = evt.target.value.toUpperCase();
     currentEffect = EffectParameters[effect];
     updateEffectSlider();
+  }
+
+  if (isNoneEffect()) {
+    imgUploadPreview.removeAttribute('style');
   }
 };
 

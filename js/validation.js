@@ -1,4 +1,4 @@
-const SYMBOL = /^#[a-zа-яё0-9]{1,19}/i;
+const SYMBOL = /^#[a-zа-яё0-9]{1,19}$/i;
 const HASHTAG_MAX_COUNT = 5;
 const HASHTAG_MAX_LENGTH = 20;
 const MessageError = {
